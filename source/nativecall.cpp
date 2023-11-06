@@ -31,7 +31,7 @@
 #ifdef SYSTEM_LINUX
 #if defined ARCHITECTURE_X86_64
 #include <dynohook/conventions/x64/x64SystemVcall.h>
-#elif ARCHITECTURE_X86
+#elif defined ARCHITECTURE_X86
 #include <dynohook/conventions/x86/x86GccCdecl.h>
 #include <dynohook/conventions/x86/x86GccThiscall.h>
 #endif
@@ -294,74 +294,6 @@ namespace NativeCall
 		
 		return ReturnAction::Ignored;
 	}
-	/*
-	void lua_func_detour_binding(ffi_cif* cif, void* ret, void* args[],
-		void* native_call)
-	{
-		CNativeCall* pCall = reinterpret_cast<CNativeCall*>(native_call);
-		if (pCall)
-		{
-			int arg_num = pCall->GetArgTypes().size();
-
-			GarrysMod::Lua::ILuaBase* LUA = lua;
-
-			LUA->ReferencePush(pCall->GetDetourFunctionRef());
-
-			if (LUA->GetType(-1) == GarrysMod::Lua::Type::Function)
-			{
-				for (int i = 0; i < arg_num; i++)
-				{
-					int iArgType = pCall->GetMyArgTypes()[i];
-
-					switch (iArgType)
-					{
-					case FFI_ARG_INT: // int
-					{
-						int* arg = reinterpret_cast<int*>(args[i]);
-						LUA->PushNumber(*arg);
-						break;
-					}
-					case FFI_ARG_DOUBLE: // double
-					{
-						double* arg = reinterpret_cast<double*>(args[i]);
-						LUA->PushNumber(*arg);
-
-						break;
-					}
-					case FFI_ARG_STRING: // string
-					{
-						char* arg = reinterpret_cast<char*>(args[i]);
-						LUA->PushString(arg);
-
-						break;
-					}
-					case FFI_ARG_ENTITY: // entity
-					{
-						CBaseEntity* arg = reinterpret_cast<CBaseEntity*>(args[i]);
-						if (auto PushEntity = FunctionPointers::LUA_PushEntity())
-						{
-							PushEntity(arg);
-						}
-
-						break;
-					}
-					default:
-						break;
-					}
-				}
-
-				LUA->PCall(arg_num, pCall->GetReturnType() && pCall->GetMyReturnType() != FFI_RET_VOID ? 1 : 0, 0);
-
-
-				// TODO: Handle return
-
-				
-				
-			}
-		}
-
-	}
-	*/
 
 	LUA_FUNCTION_STATIC(gc)
 	{
@@ -750,8 +682,6 @@ namespace NativeCall
 		if (!udata->GetFunctionPtr())
 			LUA->ThrowError("Function pointer is NULL!");
 
-		// TODO: Check global unordered_map to see if we already detoured the targeted function
-
 		int ref = LUA->ReferenceCreate();
 		
 		udata->AddGlobalDetourFunctionRef(ref);
@@ -856,31 +786,7 @@ namespace NativeCall
 		Hook* hook = manager.hook(udata->GetFunctionPtr(), convention);
 		hook->m_extradata = (void*)udata;
 		hook->addCallback(HookType::Pre, (HookHandler*)&PreHook);
-		/*
-		void* p;
-		ffi_closure* closure = static_cast<ffi_closure*>(ffi_closure_alloc(sizeof(ffi_closure), &p));
-
 		
-		if ( ffi_prep_closure_loc(closure, &udata->GetCif(), &lua_func_detour_binding,
-			udata, p ) != FFI_OK)
-		{
-			LUA->ThrowError("Cannot prep closure!");
-		}
-		
-		udata->SetDetourClosure(closure);
-
-		if (!NativeDetour.Create(udata->GetFunctionPtr(), closure))
-		{
-			ffi_closure_free(closure);
-			udata->SetDetourClosure(NULL);
-
-			LUA->ThrowError("Cannot create detour! Freeing ffi new closure...");
-		}
-		
-
-		NativeDetour.Enable();
-		*/
-
 		return 0;
 	}
 
