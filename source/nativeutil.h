@@ -4,7 +4,6 @@
 #include <GarrysMod/Symbol.hpp>
 #include <scanning/symbolfinder.hpp>
 #include <GarrysMod/FactoryLoader.hpp>
-#include <dynohook/detour.h>
 
 #include "Platform.hpp"
 
