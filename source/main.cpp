@@ -3,7 +3,6 @@
 #include <GarrysMod/Symbol.hpp>
 
 #include "nativecall.h"
-#include "../../garrysmod_sprites/source/sprite_pointers.h"
 
 #include <string_view>
 namespace global {
