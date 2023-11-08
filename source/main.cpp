@@ -22,7 +22,7 @@ static void Initialize(GarrysMod::Lua::ILuaBase *LUA) {
 }
 
 static void Deinitialize(GarrysMod::Lua::ILuaBase *LUA) {
-
+	NativeCall::Deinitialize(LUA);
 }
 } // namespace global
 

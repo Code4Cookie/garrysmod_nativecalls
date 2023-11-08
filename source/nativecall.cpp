@@ -949,5 +949,9 @@ namespace NativeCall
 	{
 		LUA->PushNil();
 		LUA->SetField(GarrysMod::Lua::INDEX_REGISTRY, metaname);
+
+		HookManager& mng = HookManager::Get();
+
+		mng.unhookAll();
 	}
 }

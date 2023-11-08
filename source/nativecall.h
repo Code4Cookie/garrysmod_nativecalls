@@ -9,6 +9,7 @@
 namespace NativeCall
 {
 	void Initialize(GarrysMod::Lua::ILuaBase* LUA);
+	void Deinitialize(GarrysMod::Lua::ILuaBase* LUA);
 
 	class CNativeCall
 	{
